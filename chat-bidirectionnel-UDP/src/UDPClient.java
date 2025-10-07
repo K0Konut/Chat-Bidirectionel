@@ -1,6 +1,6 @@
-/**Costa MASKULOV THOME Blanche **/
-/**Groupe: 19 */
-/*Port: 41000 */
+/** Costa MASKULOV THOME Blanche **/
+/** Groupe: 19 **/
+/** Port: 41000 **/
 
 // UDPClient.java
 import java.net.*;  // Contient DatagramSocket, DatagramPacket, InetAddress
@@ -9,43 +9,54 @@ import java.util.Scanner;
 
 public class UDPClient {
     public static void main(String[] args) {
-        final int SERVER_PORT = 5000;
-        Scanner sc = new Scanner(System.in);
+
+        // Vérifier qu'on a bien passé l'adresse IP et le port en arguments
+        if (args.length != 2) {
+            System.out.println("Usage : java UDPClient <adresse_IP_serveur> <port>");
+            return;
+        }
 
         try {
+            // Récupération des arguments
+            String serverIP = args[0];
+            int serverPort = Integer.parseInt(args[1]);
+
             // Création du socket client
             DatagramSocket clientSocket = new DatagramSocket();
-            InetAddress serverAddress = InetAddress.getLocalHost(); // Serveur local
+            InetAddress serverAddress = InetAddress.getByName(serverIP);
+
+            System.out.println("Client UDP prêt. Envoi vers " + serverIP + ":" + serverPort);
+
+            Scanner sc = new Scanner(System.in);
 
             while (true) {
                 System.out.print("Vous : ");
                 String message = sc.nextLine();
 
-                // Convertir en tableau d’octets
+                // Conversion en octets et envoi au serveur
                 byte[] sendData = message.getBytes();
-
-                // Créer et envoyer le paquet
-                DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, serverAddress, SERVER_PORT);
+                DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, serverAddress, serverPort);
                 clientSocket.send(sendPacket);
 
-                // Si on veut quitter, on sort de la boucle
+                // Si l'utilisateur tape "QUIT", on sort
                 if (message.equalsIgnoreCase("QUIT")) {
                     System.out.println("Fermeture du client...");
                     break;
                 }
 
-                // Préparer un buffer pour la réponse
+                // Préparer la réception de la réponse du serveur
                 byte[] receiveBuffer = new byte[1024];
                 DatagramPacket receivePacket = new DatagramPacket(receiveBuffer, receiveBuffer.length);
-
-                // Attente réponse du serveur
                 clientSocket.receive(receivePacket);
+
+                // Afficher la réponse
                 String response = new String(receivePacket.getData(), 0, receivePacket.getLength());
                 System.out.println("Serveur : " + response);
             }
 
             clientSocket.close();
             sc.close();
+
         } catch (IOException e) {
             System.out.println("Erreur : " + e.getMessage());
         }
