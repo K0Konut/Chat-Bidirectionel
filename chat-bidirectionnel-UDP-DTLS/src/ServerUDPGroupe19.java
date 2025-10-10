@@ -14,7 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.Arrays;
 
-public class DTLSPskServer {
+public class ServerUDPGroupe19 {
     private static final int PORT = 41000;
 
     static class SimplePskIdentityManager implements TlsPSKIdentityManager {
@@ -33,11 +33,11 @@ public class DTLSPskServer {
     public static void main(String[] args) throws Exception {
         System.out.println("DTLS PSK Server sur UDP " + PORT);
 
-        // 1) Socket UDP + transport DTLS
+        // Socket UDP + transport DTLS
         DatagramSocket udp = new DatagramSocket(new InetSocketAddress(PORT));
-        UdpDatagramTransport udpTransport = new UdpDatagramTransport(udp, null);
+        UdpDatagramTransportGroupe19 udpTransport = new UdpDatagramTransportGroupe19(udp, null);
 
-        // 2) Crypto + handshake
+        // Crypto
         SecureRandom rng = new SecureRandom();
         TlsCrypto crypto = new BcTlsCrypto(rng);
         DTLSServerProtocol serverProtocol = new DTLSServerProtocol();
@@ -45,13 +45,13 @@ public class DTLSPskServer {
         DTLSTransport dtls = serverProtocol.accept(server, udpTransport);
         System.out.println("Handshake DTLS réussi (PSK).");
 
-        // 3) Boucle tour par tour : RECV -> (affiche) -> ASK CLAVIER -> SEND
+        // Boucle tour par tour : RECU -> (affiche) -> ASK CLAVIER -> SEND
         BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
         byte[] buf = new byte[2048];
 
         while (true) {
-            // RECV
-            int n = dtls.receive(buf, 0, buf.length, 0); // bloquant
+            // RECU
+            int n = dtls.receive(buf, 0, buf.length, 0);
             if (n < 0) break;
             String msg = new String(buf, 0, n, StandardCharsets.UTF_8);
             System.out.println("[Client] " + msg);
@@ -70,11 +70,6 @@ public class DTLSPskServer {
             if (response == null) break;
             byte[] out = response.getBytes(StandardCharsets.UTF_8);
             dtls.send(out, 0, out.length);
-
-            if ("QUIT".equalsIgnoreCase(response)) {
-                System.out.println("(Quit demandé par le serveur)");
-                break;
-            }
         }
 
         dtls.close();

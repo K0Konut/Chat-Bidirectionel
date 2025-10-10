@@ -6,7 +6,7 @@ import java.net.*;
 import java.io.*;
 import java.util.Scanner;
 
-public class UDPServer {
+public class ServerUDPGroupe19 {
     public static void main(String[] args) {
         final int PORT = 41000; // Port fixe pour recevoir
         byte[] buffer = new byte[1024];

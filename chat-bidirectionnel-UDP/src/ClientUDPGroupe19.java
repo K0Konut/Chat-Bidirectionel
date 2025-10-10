@@ -6,7 +6,7 @@ import java.net.*;
 import java.io.*;
 import java.util.Scanner;
 
-public class UDPClient {
+public class ClientUDPGroupe19 {
     public static void main(String[] args) {
 
         // Vérifier qu'on a bien passé l'adresse IP et le port en arguments

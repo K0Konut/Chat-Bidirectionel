@@ -13,11 +13,11 @@ import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 
-public class DTLSPskClient {
+public class ClientUDPGroupe19 {
     static class MyPskClient extends PSKTlsClient {
-        public MyPskClient(TlsCrypto crypto, TlsPSKIdentity pskIdentity) { super(crypto, pskIdentity); }
-        @Override protected int[] getSupportedCipherSuites() { return new int[]{ CipherSuite.TLS_PSK_WITH_AES_128_CCM_8 }; }
-        @Override protected ProtocolVersion[] getSupportedVersions() { return new ProtocolVersion[]{ ProtocolVersion.DTLSv12 }; }
+        public MyPskClient(TlsCrypto crypto, TlsPSKIdentity pskIdentity) { super(crypto, pskIdentity); } // passe crypto + identité PSK au parent
+        @Override protected int[] getSupportedCipherSuites() { return new int[]{ CipherSuite.TLS_PSK_WITH_AES_128_CCM_8 }; }  // suite choisie
+        @Override protected ProtocolVersion[] getSupportedVersions() { return new ProtocolVersion[]{ ProtocolVersion.DTLSv12 }; }  // DTLS 1.2
     }
 
     public static void main(String[] args) throws Exception {
@@ -25,20 +25,20 @@ public class DTLSPskClient {
             System.out.println("Usage: java DTLSPskClient <server_ip> <port>");
             return;
         }
-        String host = args[0];
-        int port = Integer.parseInt(args[1]);
+        String host = args[0]; // IP/nom du serveur
+        int port = Integer.parseInt(args[1]); // Port du serveur
 
         // 1) Socket UDP + transport DTLS
         DatagramSocket udp = new DatagramSocket(); // port local éphémère
-        udp.connect(new InetSocketAddress(host, port));
-        UdpDatagramTransport udpTransport = new UdpDatagramTransport(udp, new InetSocketAddress(host, port));
+        udp.connect(new InetSocketAddress(host, port)); // Verrouille le pair côté UDP
+        UdpDatagramTransportGroupe19 udpTransport = new UdpDatagramTransportGroupe19(udp, new InetSocketAddress(host, port));
 
         // 2) Crypto + handshake
-        SecureRandom rng = new SecureRandom();
-        TlsCrypto crypto = new BcTlsCrypto(rng);
-        byte[] id  = "client1".getBytes(StandardCharsets.UTF_8);
-        byte[] key = "secret123".getBytes(StandardCharsets.UTF_8);
-        TlsPSKIdentity identity = new BasicTlsPSKIdentity(id, key);
+        SecureRandom rng = new SecureRandom(); // Aléa pour DTLS
+        TlsCrypto crypto = new BcTlsCrypto(rng);  // Implémentation crypto BC
+        byte[] id  = "client1".getBytes(StandardCharsets.UTF_8);    // ID PSK (côté client)
+        byte[] key = "secret123".getBytes(StandardCharsets.UTF_8);  // Clé partagée (même des 2 côtés)
+        TlsPSKIdentity identity = new BasicTlsPSKIdentity(id, key); // Objet “identité PSK”
 
         DTLSClientProtocol clientProtocol = new DTLSClientProtocol();
         TlsClient client = new MyPskClient(crypto, identity);
@@ -69,7 +69,7 @@ public class DTLSPskClient {
                 break;
             }
 
-            // RECV (bloquant)
+            // RECU (bloquant)
             int n = dtls.receive(inBuf, 0, inBuf.length, 0);
             if (n < 0) break;
             String resp = new String(inBuf, 0, n, StandardCharsets.UTF_8);
