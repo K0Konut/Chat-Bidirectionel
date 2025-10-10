@@ -2,9 +2,8 @@
 /** Groupe: 19 **/
 /** Port: 41000 **/
 
-// UDPClient.java
-import java.net.*;  // Contient DatagramSocket, DatagramPacket, InetAddress
-import java.io.*;   // Pour IOException
+import java.net.*; 
+import java.io.*;
 import java.util.Scanner;
 
 public class UDPClient {
@@ -22,12 +21,12 @@ public class UDPClient {
             int serverPort = Integer.parseInt(args[1]);
 
             // Création du socket client
-            DatagramSocket clientSocket = new DatagramSocket();
-            InetAddress serverAddress = InetAddress.getByName(serverIP);
+            DatagramSocket clientSocket = new DatagramSocket();  // Ouvre un socket UDP côté client 
+            InetAddress serverAddress = InetAddress.getByName(serverIP); // Résout l’IP en objet InetAddress
 
             System.out.println("Client UDP prêt. Envoi vers " + serverIP + ":" + serverPort);
 
-            Scanner sc = new Scanner(System.in);
+            Scanner sc = new Scanner(System.in); // Prépare la lecture au clavier
 
             while (true) {
                 System.out.print("Vous : ");
@@ -36,7 +35,7 @@ public class UDPClient {
                 // Conversion en octets et envoi au serveur
                 byte[] sendData = message.getBytes();
                 DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, serverAddress, serverPort);
-                clientSocket.send(sendPacket);
+                clientSocket.send(sendPacket); // Envoie le paquet UDP sur le réseau
 
                 // Si l'utilisateur tape "QUIT", on sort
                 if (message.equalsIgnoreCase("QUIT")) {
@@ -57,7 +56,7 @@ public class UDPClient {
             clientSocket.close();
             sc.close();
 
-        } catch (IOException e) {
+        } catch (IOException e) { // Attrape toute erreur d’E/S (résolution IP, socket, envoi, réception)
             System.out.println("Erreur : " + e.getMessage());
         }
     }

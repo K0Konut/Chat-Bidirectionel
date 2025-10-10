@@ -42,8 +42,7 @@ public class UDPServer {
                 String response = sc.nextLine();
 
                 byte[] sendData = response.getBytes();
-                DatagramPacket sendPacket =
-                        new DatagramPacket(sendData, sendData.length, clientAddress, clientPort);
+                DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, clientAddress, clientPort);
                 serverSocket.send(sendPacket);
             }
 
