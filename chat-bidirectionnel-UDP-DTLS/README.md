@@ -1,20 +1,10 @@
-# compiler
-javac -cp .:bcprov-jdk18on-1.78.1.jar:bctls-jdk18on-1.78.1.jar src/*.java
+# Compiler
+rm -f src/*.class
 
-# lancer le serveur (terminal A)
-java -cp .:bcprov-jdk18on-1.78.1.jar:bctls-jdk18on-1.78.1.jar DTLSPskServer
+javac -cp "src:lib/bcprov-jdk18on-1.77.jar:lib/bcpkix-jdk18on-1.77.jar:lib/bctls-jdk18on-1.77.jar:lib/bcutil-jdk18on-1.77.jar:lib/bcprov-ext-jdk18on-1.77.jar" src/*.java
 
-# lancer le client (terminal B)
-java -cp .:bcprov-jdk18on-1.78.1.jar:bctls-jdk18on-1.78.1.jar DTLSPskClient 127.0.0.1 41000
+# Serveur
+java -cp "src:lib/bcprov-jdk18on-1.77.jar:lib/bcpkix-jdk18on-1.77.jar:lib/bctls-jdk18on-1.77.jar:lib/bcutil-jdk18on-1.77.jar:lib/bcprov-ext-jdk18on-1.77.jar" DTLSPskServer
 
-
-
-
-REM compiler
-javac -cp .;bcprov-jdk18on-1.78.1.jar;bctls-jdk18on-1.78.1.jar src\*.java
-
-REM serveur
-java -cp .;bcprov-jdk18on-1.78.1.jar;bctls-jdk18on-1.78.1.jar DTLSPskServer
-
-REM client
-java -cp .;bcprov-jdk18on-1.78.1.jar;bctls-jdk18on-1.78.1.jar DTLSPskClient 127.0.0.1 41000
+# Client
+java -cp "src:lib/bcprov-jdk18on-1.77.jar:lib/bcpkix-jdk18on-1.77.jar:lib/bctls-jdk18on-1.77.jar:lib/bcutil-jdk18on-1.77.jar:lib/bcprov-ext-jdk18on-1.77.jar" DTLSPskClient IP 41000
