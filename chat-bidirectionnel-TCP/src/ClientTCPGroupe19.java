@@ -1,4 +1,4 @@
-/** Costa MASKULOV THOME Blanche **/
+/** Costa MASKULOV THOME Blanche bintou fané**/
 /** Groupe: 19 **/
 /** Port: 41000 **/
 
@@ -6,7 +6,7 @@ import java.net.*;
 import java.io.*;
 import java.util.Scanner;
 
-public class TCPClient {
+public class ClientTCPGroupe19 {
     public static void main(String[] args) {
         // Vérifier qu'on a bien passé l'adresse IP et le port en arguments
         if (args.length != 2) {

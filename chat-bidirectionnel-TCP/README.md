@@ -1,10 +1,9 @@
 Pour lancer en TCP : 
 
-
 # Compiler
-javac src/TCPServer.java src/TCPClient.java
+javac src/ServerTCPGroupe19.java src/ClientTCPGroupe19.java
 
 # Lancer le serveur (PC A)
-java -cp src TCPServer
+java -cp src ServerTCPGroupe19
 # Lancer le client (PC B)
-java -cp src TCPClient IP 41000
+java -cp src ClientTCPGroupe19 IP 41000

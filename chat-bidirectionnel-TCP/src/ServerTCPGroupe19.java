@@ -1,4 +1,4 @@
-/** Costa MASKULOV THOME Blanche **/
+/** Costa MASKULOV THOME Blanche bintou fané**/
 /** Groupe: 19 **/
 /** Port: 41000 **/
 
@@ -6,7 +6,7 @@ import java.net.*;
 import java.io.*;
 import java.util.Scanner;
 
-public class TCPServer {
+public class ServerTCPGroupe19 {
     public static void main(String[] args) {
         final int PORT = 41000; // Port fixe comme ta version UDP
         Scanner console = new Scanner(System.in);
